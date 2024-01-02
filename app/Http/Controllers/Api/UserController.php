@@ -22,7 +22,7 @@ class UserController extends Controller
         $u = User::where('email', $request->email);
         $user = $u->first();
 
-        if ($u == null) {
+        if ($user == null) {
             $res = [
                 'status' => 500,
                 'message' => "Kami tidak dapat menemukan akun Anda"

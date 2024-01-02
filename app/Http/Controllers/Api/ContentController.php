@@ -56,6 +56,17 @@ class ContentController extends Controller
             storage_path('app/public/user_videos/' . $videoFileName), $videoFileName
         );
 
+        // getting hashtags
+        $tags = null;
+        preg_match_all("/(#\w+)/", $request->caption, $hashtags);
+        if (count($hashtags[0]) > 0) {
+            $tags = [];
+            foreach ($hashtags[0] as $ht) {
+                array_push($tags, str_replace("#", "", $ht));
+            }
+            $tags = implode(",", $tags);
+        }
+
         $saveData = Content::create([
             'user_id' => $user->id,
             'caption' => $request->caption,
@@ -64,6 +75,7 @@ class ContentController extends Controller
             'visibility' => $request->visibility,
             'likes_count' => 0,
             'comments_count' => 0,
+            'tags' => $tags,
         ]);
 
         return response()->json([

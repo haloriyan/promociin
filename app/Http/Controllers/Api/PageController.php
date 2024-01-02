@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Content;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -11,11 +12,21 @@ use Illuminate\Support\Facades\Log;
 class PageController extends Controller
 {
     public function home(Request $request) {
-        $contents = Content::orderBy('created_at', 'DESC')
-        ->with(['user'])->get();
+        $tag = $request->tag;
+        Log::info($tag);
+        if ($tag != "") {
+            $c = Content::where('tags', 'LIKE', '%'.$tag.'%')
+            ->orWhere('caption', 'LIKE', '%'.$tag.'%')
+            ->orderBy('created_at', 'DESC');
+        } else {
+            $c = Content::orderBy('created_at', 'DESC');
+        }
+        $contents = $c->with(['user'])->get();
+        $tags = Tag::orderBy('priority', 'DESC')->orderBy('updated_at', 'DESC')->get();
 
         return response()->json([
-            'contents' => $contents
+            'contents' => $contents,
+            'tags' => $tags,
         ]);
     }
     public function explore(Request $request) {
