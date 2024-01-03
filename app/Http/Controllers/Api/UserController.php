@@ -73,6 +73,7 @@ class UserController extends Controller
                 'followers_count' => 0,
                 'following_count' => 0,
                 'likes_count' => 0,
+                'blue_check' => false,
             ]);
     
             $createOtp = OtpController::create($saveData, 'register');

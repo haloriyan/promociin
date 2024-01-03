@@ -50,6 +50,9 @@ class User extends Authenticatable
     public function educations() {
         return $this->hasMany(Education::class, 'user_id')->orderBy('end_date', 'DESC');
     }
+    public function certificates() {
+        return $this->hasMany(UserCertificate::class, 'user_id')->orderBy('publish_date', 'DESC');
+    }
     public function following_status() {
         return $this->hasOne(UserFollowing::class, 'following_user_id');
     }

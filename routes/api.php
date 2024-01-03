@@ -52,6 +52,12 @@ Route::group(['prefix' => "skill"], function () {
     Route::post('delete', "SkillController@delete");
     Route::post('/', "SkillController@list");
 });
+Route::group(['prefix' => "certificate"], function () {
+    Route::post('store', "CertificateController@store");
+    Route::post('update', "CertificateController@update");
+    Route::post('delete', "CertificateController@delete");
+    Route::post('/', "CertificateController@list");
+});
 
 Route::group(['prefix' => "content"], function () {
     Route::post('store', "ContentController@store");
@@ -77,4 +83,10 @@ Route::group(['prefix' => "appointment"], function () {
     Route::post('{username}/store', "AppointmentController@store");
     Route::post('accept', "AppointmentController@acceptInvitation");
     Route::post('/', "AppointmentController@list");
+});
+
+Route::group(['prefix' => "chat"], function () {
+    Route::post('load', "ChatController@load");
+    Route::post('send', "ChatController@send");
+    Route::post('room', "ChatController@room");
 });
