@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use Str;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use App\Models\Chat;
 use App\Models\Content;
 use App\Models\User;
 use App\Models\UserFollowers;
@@ -221,5 +223,54 @@ class UserController extends Controller
         return response()->json([
             'status' => 200
         ]);
+    }
+    public function deleteAccount(Request $request) {
+        $u = User::where('token', $request->token);
+        $user = $u->with(['certificates'])->first();
+        $res = [
+            'status' => 200,
+            'message' => ""
+        ];
+
+        if (Hash::check($request->password, $user->password)) {
+            // content deletion
+            $c = Content::where('user_id', $user->id);
+            $contents = $c->get(['filename', 'thumbnail']);
+            $c->delete();
+            foreach ($contents as $content) {
+                Storage::delete('public/user_videos/' . $content->filename);
+                Storage::delete('public/video_thumbs/' . $content->thumbnail);
+            }
+
+            // chats deletion
+            $ch = Chat::where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
+            $chats = $ch->get(['type', 'body']);
+            $ch->delete();
+            foreach ($chats as $chat) {
+                if ($chat->type == "image") {
+                    Storage::delete('public/chat_images/' . $chat->body);
+                }
+                if ($chat->type == "file") {
+                    Storage::delete('public/chat_files/' . $chat->body);
+                }
+            }
+
+            if ($user->certificates->count() > 0) {
+                foreach ($user->certificates as $cert) {
+                    Storage::delete('public/certificate_medias/' . $cert->filename);
+                }
+            }
+
+            Storage::delete('public/user_photos/' . $user->photo);
+
+            $u->delete();
+        } else {
+            $res = [
+                'status' => 403,
+                'message' => "Password yang Anda masukkan tidak tepat"
+            ];
+        }
+
+        return response()->json($res);
     }
 }

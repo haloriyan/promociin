@@ -16,6 +16,7 @@ Route::group(['prefix' => "user"], function () {
     Route::post('update-basic', "UserController@updateBasic");
     Route::post('update-bio', "UserController@updateBio");
     Route::post('update-photo', "UserController@updatePhoto");
+    Route::post('delete-account', "UserController@deleteAccount");
 
     Route::post('forget-password', "UserController@forgetPassword");
     Route::post('reset-password', "UserController@resetPassword");
