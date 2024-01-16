@@ -11,7 +11,7 @@ class Appointment extends Model
 
     protected $fillable = [
         'employer_id', 'employee_id', 'dues', 'skillsets',
-        'is_accepted_by_employee'
+        'is_accepted_by_employee', 'link', 'notes'
     ];
 
     public function employer() {

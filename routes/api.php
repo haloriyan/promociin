@@ -83,6 +83,7 @@ Route::group(['prefix' => "comment/{contentID}"], function () {
 Route::group(['prefix' => "appointment"], function () {
     Route::post('{username}/store', "AppointmentController@store");
     Route::post('accept', "AppointmentController@acceptInvitation");
+    Route::post('send-link', "AppointmentController@sendLink");
     Route::post('/', "AppointmentController@list");
 });
 
@@ -90,4 +91,8 @@ Route::group(['prefix' => "chat"], function () {
     Route::post('load', "ChatController@load");
     Route::post('send', "ChatController@send");
     Route::post('room', "ChatController@room");
+});
+
+Route::group(['prefix' => "stream"], function () {
+    Route::post('post', "LivestreamController@post");
 });

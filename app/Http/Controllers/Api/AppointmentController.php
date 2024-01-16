@@ -39,11 +39,13 @@ class AppointmentController extends Controller
         $employer = User::where('token', $request->token)->first();
         $employee = User::where('username', $username)->first();
 
+        $theDues = $request->dues . " " . $request->time;
+
         $saveData = Appointment::create([
             'employer_id' => $employer->id,
             'employee_id' => $employee->id,
             'is_accepted_by_employee' => null,
-            'dues' => $request->dues,
+            'dues' => $theDues,
             'notes' => $request->notes,
         ]);
 
@@ -70,6 +72,16 @@ class AppointmentController extends Controller
         
         return response()->json([
             'status' => 200,
+        ]);
+    }
+    public function sendLink(Request $request) {
+        $data = Appointment::where('id', $request->id);
+        $data->update([
+            'link' => $request->link,
+        ]);
+
+        return response()->json([
+            'message' => "ok"
         ]);
     }
 }
