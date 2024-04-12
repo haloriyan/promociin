@@ -1,0 +1,30 @@
+.Header {
+    z-index: 49;
+}
+.Container {
+    left: -270px;
+}
+.Container.sidebar-on {
+    left: 0%;
+}
+.Sidebar {
+    position: fixed !important;
+    bottom: 0px;
+    width: 270px;
+    min-width: 270px;
+}
+.content {
+    width: calc(100% - 270px);
+    margin-left: 270px;
+    padding: 40px;
+}
+
+.sub-menu {
+    padding-top: -80px !important;
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: 20px;
+    }
+}

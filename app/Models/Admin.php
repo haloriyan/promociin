@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class Tag extends Model
+class Admin extends Authenticatable
 {
     use HasFactory;
 
     protected $fillable = [
-        'icon', 'name', 'priority'
+        'name', 'username', 'password', 'token'
     ];
 }

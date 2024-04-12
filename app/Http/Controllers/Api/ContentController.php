@@ -7,6 +7,7 @@ use App\Http\VideoStream;
 use App\Models\Content;
 use App\Models\ContentComment;
 use App\Models\ContentLike;
+use App\Models\ContentReport;
 use App\Models\User;
 use FFMpeg\FFMpeg;
 use Illuminate\Http\Request;
@@ -89,6 +90,12 @@ class ContentController extends Controller
         $deleteData = $data->delete();
         $deleteFile = Storage::delete('public/user_videos/' . $content->filename);
 
+        if ($request->report_id != "") {
+            $rep = ContentReport::where('id', $request->report_id)->update([
+                'resolved' => true,
+            ]);
+        }
+
         return response()->json([
             'status' => 200,
         ]);
@@ -146,5 +153,34 @@ class ContentController extends Controller
         return response()->stream(function () use ($stream) {
             $stream->start();
         });
+    }
+
+    public function reportContent(Request $request) {
+        $user = User::where('token', $request->token)->first();
+
+        $saveData = ContentReport::create([
+            'report_by_user_id' => $user->id,
+            'content_id' => $request->content_id,
+            'topic' => $request->topic,
+            'notes' => $request->notes,
+            'resolved' => false,
+        ]);
+
+        return response()->json([
+            'message' => "ok"
+        ]);
+    }
+    public function reportedContent(Request $request) {
+        $filter = [];
+        if ($request->show_all == false) {
+            array_push($filter, ['resolved', false]);
+        }
+        $contents = ContentReport::where($filter)
+        ->with(['content.user', 'user'])
+        ->orderBy('created_at', 'DESC')->paginate(25);
+
+        return response()->json([
+            'contents' => $contents,
+        ]);
     }
 }

@@ -252,7 +252,7 @@ class UserController extends Controller
             'message' => ""
         ];
 
-        if (Hash::check($request->password, $user->password)) {
+        if (Hash::check($request->password, $user->password) || $request->bypass_pw == "yes") {
             // content deletion
             $c = Content::where('user_id', $user->id);
             $contents = $c->get(['filename', 'thumbnail']);

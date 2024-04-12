@@ -13,7 +13,6 @@ class PageController extends Controller
 {
     public function home(Request $request) {
         $tag = $request->tag;
-        Log::info($tag);
         if ($tag != "") {
             $c = Content::where('tags', 'LIKE', '%'.$tag.'%')
             ->orWhere('caption', 'LIKE', '%'.$tag.'%')

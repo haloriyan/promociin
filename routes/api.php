@@ -8,6 +8,45 @@ Route::group(['prefix' => "page"], function () {
     Route::post('explore', "PageController@explore");
 });
 
+Route::group(['prefix' => "ad"], function () {
+    Route::get('fetch', "AdController@fetch");
+    Route::post('click', "AdController@click");
+});
+
+Route::group(['prefix' => "admin"], function () {
+    Route::post('login', "AdminController@login");
+    Route::post('logout', "AdminController@logout");
+
+    Route::group(['prefix' => "tag"], function () {
+        Route::post('create', "TagController@create");
+        Route::post('delete', "TagController@delete");
+        Route::post('update', "TagController@update");
+        Route::post('/', "TagController@list");
+    });
+
+    Route::group(['prefix' => "ad"], function () {
+        Route::post('create', "AdController@create");
+        Route::post('update', "AdController@update");
+        Route::group(['prefix' => "{id}"], function () {
+            Route::post('views', "AdController@views");
+            Route::post('clicks', "AdController@clicks");
+            Route::post('delete', "AdController@delete");
+            Route::post('/', "AdController@detail");
+        });
+        
+        Route::post('/', "AdController@list");
+    });
+
+    Route::group(['prefix' => "user"], function () {
+        Route::post('delete', "UserController@delete");
+        Route::post('/', "AdminController@user");
+    });
+
+    Route::group(['prefix' => "content"], function () {
+        Route::post('reported', "ContentController@reportedContent");
+    });
+});
+
 Route::group(['prefix' => "user"], function () {
     Route::post('login', "UserController@login");
     Route::post('logout', "UserController@logout");
@@ -63,6 +102,7 @@ Route::group(['prefix' => "certificate"], function () {
 Route::group(['prefix' => "content"], function () {
     Route::post('store', "ContentController@store");
     Route::post('delete', "ContentController@delete");
+    Route::post('report', "ContentController@report");
 
     Route::group(['prefix' => "{contentID}"], function () {
         Route::post('like', "ContentController@like");
