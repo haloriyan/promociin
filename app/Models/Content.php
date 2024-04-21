@@ -11,7 +11,7 @@ class Content extends Model
 
     protected $fillable = [
         'user_id', 'filename', 'caption', 'visibility', 'thumbnail',
-        'likes_count', 'comments_count', 'tags'
+        'likes_count', 'comments_count', 'tags', 'can_be_commented', 'can_be_shared'
     ];
 
     public function user() {

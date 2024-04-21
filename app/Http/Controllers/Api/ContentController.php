@@ -9,10 +9,15 @@ use App\Models\ContentComment;
 use App\Models\ContentLike;
 use App\Models\ContentReport;
 use App\Models\User;
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use FFMpeg\Filters\Video\VideoFilters;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg as Mpeg;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg as SupportFFMpeg;
 
 class ContentController extends Controller
 {
@@ -47,6 +52,43 @@ class ContentController extends Controller
             'contents' => $contents,
         ]);
     }
+    public function storeMulti (Request $request) {
+        $token = $request->token;
+        $videos = $request->file('videos');
+        $filenames = [];
+        $toConcat = [];
+        foreach ($videos as $v => $video) {
+            $fileName = $video->getClientOriginalName();
+            $video->storeAs('public/video_to_concat/' . $token, $fileName);
+
+            array_push($filenames, $fileName);
+            // if ($v > 0) {
+                array_push($toConcat, 
+                    'video_to_concat/' . $token . '/' . $fileName
+                );
+            // }
+            
+            // Rename to .mp4
+            // $names = explode(".", $fileName);
+            // $names[count($names) - 1] = "mp4";
+            // $fileName = implode(".", $names);
+            // $ffmpeg->save($format, storage_path('app/public/video_to_concat/' . $token . '/' . $fileName));
+        }
+
+        $newFilename = Str::random(32);
+
+        // ->addFilter(['-vf', 'scale=-2:480'])
+        SupportFFMpeg::fromDisk('public')->open($toConcat)
+        ->export()
+        ->inFormat(new \FFMpeg\Format\Video\X264())
+        ->resize(1920, 1080)
+        ->concatWithTranscoding()
+        ->save(
+            storage_path('app/public/video_concat/' .$newFilename. ".mp4")
+        );
+        
+        // Log::info(Storage::disk('local')->url('merged_video.mp4'));
+    }
     public function store(Request $request) {
         $user = User::where('token', $request->token)->first();
         $video = $request->file('video');
@@ -73,10 +115,14 @@ class ContentController extends Controller
             'caption' => $request->caption,
             'filename' => $videoFileName,
             'thumbnail' => $videoFileName . ".jpg",
-            'visibility' => $request->visibility,
+            'visibility' => true,
             'likes_count' => 0,
             'comments_count' => 0,
             'tags' => $tags,
+            // 'can_be_commented' => $request->can_be_commented,
+            // 'can_be_shared' => $request->can_be_shared,
+            'can_be_commented' => true,
+            'can_be_shared' => true,
         ]);
 
         return response()->json([
