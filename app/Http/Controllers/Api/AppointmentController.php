@@ -74,6 +74,37 @@ class AppointmentController extends Controller
             'status' => 200,
         ]);
     }
+    public function declineInvitation(Request $request) {
+        $data = Appointment::where('id', $request->id);
+        $appointment = $data->first();
+        $user = User::where('token', $request->token)->first();
+
+        if ($appointment->employee_id == $user->id) {
+            $data->update([
+                'is_accepted_by_employee' => false,
+            ]);
+        }
+        
+        return response()->json([
+            'status' => 200,
+        ]);
+    }
+    public function answerInvitation(Request $request) {
+        $data = Appointment::where('id', $request->id);
+        $appointment = $data->first();
+        $answer = $request->answer;
+        $user = User::where('token', $request->token)->first();
+
+        if ($appointment->employee_id == $user->id) {
+            $data->update([
+                'is_accepted_by_employee' => $answer == "accept" ? true : false,
+            ]);
+        }
+        
+        return response()->json([
+            'status' => 200,
+        ]);
+    }
     public function sendLink(Request $request) {
         $data = Appointment::where('id', $request->id);
         $data->update([

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\VideoStream;
 use App\Models\Content;
 use App\Models\ContentComment;
+use App\Models\ContentDislike;
 use App\Models\ContentLike;
 use App\Models\ContentReport;
 use App\Models\User;
@@ -173,6 +174,42 @@ class ContentController extends Controller
                 ]);
                 $c->increment('likes_count');
                 $u->increment('likes_count');
+                $action = "like";
+            }
+        }
+
+        return response()->json([
+            'status' => 200,
+            'action' => $action,
+        ]);
+    }
+    public function dislike($contentID, Request $request) {
+        $c = Content::where('id', $contentID);
+        $content = $c->first();
+        $likes = [];
+        $action = null;
+        
+        if ($content != null) {
+            $u = User::where('token', $request->token);
+            $user = $u->first();
+            $l = ContentDislike::where([
+                ['content_id', $contentID],
+                ['user_id', $user->id]
+            ]);
+            $likes = $l->get('id');
+
+            if ($likes->count() > 0) {
+                $l->delete();
+                $c->decrement('dislikes_count');
+                $u->decrement('dislikes_count');
+                $action = "dislike";
+            } else {
+                ContentDislike::create([
+                    'user_id' => $user->id,
+                    'content_id' => $contentID,
+                ]);
+                $c->increment('dislikes_count');
+                $u->increment('dislikes_count');
                 $action = "like";
             }
         }

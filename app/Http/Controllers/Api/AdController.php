@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ad;
+use App\Models\AdClick;
 use App\Models\AdView;
 use App\Models\User;
 use Carbon\Carbon;
@@ -81,6 +82,31 @@ class AdController extends Controller
         
         return response()->json([
             'ad' => $ad,
+        ]);
+    }
+    public function click(Request $request) {
+        $now = Carbon::now();
+        $user = User::where('token', $request->token)->first();
+
+        $d = AdClick::where([
+            ['ad_id', $request->ad_id],
+            ['date', $now->format('Y-m-d')]
+        ]);
+        $data = $d->get('id');
+
+        if ($data->count() == 0) {
+            $saveData = AdClick::create([
+                'ad_id' => $request->ad_id,
+                'user_id' => $user->id,
+                'date' => $now->format('Y-m-d'),
+                'hit' => 1,
+            ]);
+        } else {
+            $d->increment('hit');
+        }
+
+        return response()->json([
+            'message' => "ok"
         ]);
     }
     public function create(Request $request) {

@@ -13,6 +13,11 @@ Route::group(['prefix' => "ad"], function () {
     Route::post('click', "AdController@click");
 });
 
+Route::group(['prefix' => "announcement"], function () {
+    Route::get('/', "AnnouncementController@fetch");
+    Route::post('store', "AnnouncementController@store");
+});
+
 Route::group(['prefix' => "admin"], function () {
     Route::post('login', "AdminController@login");
     Route::post('logout', "AdminController@logout");
@@ -106,6 +111,7 @@ Route::group(['prefix' => "content"], function () {
 
     Route::group(['prefix' => "{contentID}"], function () {
         Route::post('like', "ContentController@like");
+        Route::post('dislike', "ContentController@dislike");
         Route::post('comment', "ContentController@comment");
         Route::get('stream', "ContentController@stream");
     });
@@ -122,7 +128,7 @@ Route::group(['prefix' => "comment/{contentID}"], function () {
 
 Route::group(['prefix' => "appointment"], function () {
     Route::post('{username}/store', "AppointmentController@store");
-    Route::post('accept', "AppointmentController@acceptInvitation");
+    Route::post('answer', "AppointmentController@answerInvitation");
     Route::post('send-link', "AppointmentController@sendLink");
     Route::post('/', "AppointmentController@list");
 });

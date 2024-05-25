@@ -11,10 +11,16 @@ class Content extends Model
 
     protected $fillable = [
         'user_id', 'filename', 'caption', 'visibility', 'thumbnail',
-        'likes_count', 'comments_count', 'tags', 'can_be_commented', 'can_be_shared'
+        'likes_count', 'dislikes_count', 'comments_count', 'tags', 'can_be_commented', 'can_be_shared'
     ];
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public function likes() {
+        return $this->hasMany(ContentLike::class, 'content_id');
+    }
+    public function dislikes() {
+        return $this->hasMany(ContentDislike::class, 'content_id');
     }
 }
