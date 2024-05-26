@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\UserBlock;
+use Illuminate\Support\Facades\Log;
 
 function Substring($text, $count) {
     $toReturn = substr($text, 0, $count);
@@ -68,8 +69,10 @@ function currency_decode($rupiah) {
 function getBlockedUser($token, $key = 'token') {
     $blockedUserIDs = [];
     $user = null;
+    
     if ($token) {
         $user = User::where($key, $token)->first();
+        
         $blockedUsers = UserBlock::where('blocker_id', $user->id)->orWhere('blocked_id', $user->id)->get();
         foreach ($blockedUsers as $blocked) {
             if ($blocked->blocker_id == $user->id) {

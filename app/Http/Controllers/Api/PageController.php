@@ -56,6 +56,7 @@ class PageController extends Controller
     public function explore(Request $request) {
         $accounts = [];
         $contents = [];
+        $blockedUserIDs = getBlockedUser($request->token);
 
         $contents = Content::where([
             ['caption', 'LIKE', '%'.$request->q.'%']
@@ -64,7 +65,7 @@ class PageController extends Controller
         ->take(20)->get();
 
         if ($request->q != "") {
-            $accounts = User::where('name', 'LIKE', '%'.$request->q.'%')
+            $accounts = User::where('name', 'LIKE', '%'.$request->q.'%')->whereNotIn('id', $blockedUserIDs)
             ->orWhere('about', 'LIKE', '%'.$request->q.'%')
             ->take(5)->get();
         }

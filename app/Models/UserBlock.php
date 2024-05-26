@@ -12,4 +12,8 @@ class UserBlock extends Model
     protected $fillable = [
         'blocker_id', 'blocked_id'
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class, 'blocked_id');
+    }
 }

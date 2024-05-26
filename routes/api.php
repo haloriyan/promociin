@@ -66,7 +66,11 @@ Route::group(['prefix' => "user"], function () {
     Route::post('forget-password', "UserController@forgetPassword");
     Route::post('reset-password', "UserController@resetPassword");
 
-    Route::post('block', "UserController@block");
+    Route::group(['prefix' => "block"], function () {
+        Route::post('list', "UserController@blockList");
+        Route::post('unblock', "UserController@unblock");
+        Route::post('/', "UserController@block");
+    });
 
     Route::group(['prefix' => "{username}"], function () {
         Route::post('profile', "UserController@profile");

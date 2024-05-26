@@ -103,13 +103,15 @@ class UserController extends Controller
     }
     public function profile($username, Request $request) {
         $username = base64_decode($username);
-        $blockedUserIDs = getBlockedUser($username, 'username');
+        $blockedUserIDs = getBlockedUser($request->token);
         $now = Carbon::now();
         $u = User::where('username', $username);
         if ($request->with != "") {
             $u = $u->with(explode(",", $request->with));
         }
         $user = $u->first();
+        $contents = [];
+        
         if (in_array($user->id, $blockedUserIDs)) {
             $user = null;
         } else {
@@ -136,6 +138,28 @@ class UserController extends Controller
         return response()->json([
             'user' => $user,
             'contents' => $contents,
+        ]);
+    }
+    public function blockList(Request $request) {
+        $user = User::where('token', $request->token)->first();
+        $blocks = UserBlock::where('blocker_id', $user->id)
+        ->with('user')
+        ->get();
+
+        return response()->json([
+            'user' => $user,
+            'blocks' => $blocks,
+        ]);
+    }
+    public function unblock(Request $request) {
+        $user = User::where('token', $request->token)->first();
+        $deleteData = UserBlock::where([
+            ['blocked_id', $request->blocked_id],
+            ['blocker_id', $user->id]
+        ])->delete();
+
+        return response()->json([
+            'message' => "ok"
         ]);
     }
     public function block(Request $request) {
