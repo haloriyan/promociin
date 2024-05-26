@@ -72,6 +72,7 @@ Route::group(['prefix' => "user"], function () {
     });
 
     Route::post('otp-auth', "OtpController@auth");
+    Route::post('otp-resend', "OtpController@resend");
 
     Route::group(['prefix' => "experience"], function () {
         Route::post('store', "ExperienceController@store");
