@@ -22,46 +22,49 @@ class AdController extends Controller
     }
     public function fetch(Request $request) {
         $adsRaw = Ad::all(['id']);
-        $totalAds = $adsRaw->count() - 1;
         $ads = [];
-        $maxAdNumber = 5;
-        $now = Carbon::now()->format('Y-m-d');
+        
+        if ($adsRaw->count() > 0) {
+            $totalAds = $adsRaw->count() - 1;
+            $maxAdNumber = 5;
+            $now = Carbon::now()->format('Y-m-d');
 
-        $user = User::where('token', $request->token)->first();
+            $user = User::where('token', $request->token)->first();
 
-        for ($i = 0; $i < $maxAdNumber; $i++) {
-            $adIndex = rand(0, $totalAds);
-            $ad = Ad::where('id', $adsRaw[$adIndex]->id)->first();
-            array_push($ads, $ad);
-        }
+            for ($i = 0; $i < $maxAdNumber; $i++) {
+                $adIndex = rand(0, $totalAds);
+                $ad = Ad::where('id', $adsRaw[$adIndex]->id)->first();
+                array_push($ads, $ad);
+            }
 
-        $hasHitted = [];
-        foreach ($ads as $ad) {
-            if (!in_array($ad->id, $hasHitted)) {
-                array_push($hasHitted, $ad->id);
-                $adViewQuery = AdView::where([
-                    ['ad_id', $ad->id],
-                    ['date', $now],
-                ]);
-                
-                $toSave = [
-                    'ad_id' => $ad->id,
-                    'date' => $now,
-                    'hit' => 1,
-                ];
-                if ($user != null) {
-                    $adViewQuery = $adViewQuery->where('user_id', $user->id);
-                    $toSave['user_id'] = $user->id;
-                } else {
-                    $adViewQuery = $adViewQuery->whereNull('user_id');
-                    $toSave['user_id'] = null;
-                }
-    
-                $adView = $adViewQuery->first();
-                if ($adView == null) {
-                    $saveData = AdView::create($toSave);
-                } else {
-                    $adViewQuery->increment('hit');
+            $hasHitted = [];
+            foreach ($ads as $ad) {
+                if (!in_array($ad->id, $hasHitted)) {
+                    array_push($hasHitted, $ad->id);
+                    $adViewQuery = AdView::where([
+                        ['ad_id', $ad->id],
+                        ['date', $now],
+                    ]);
+                    
+                    $toSave = [
+                        'ad_id' => $ad->id,
+                        'date' => $now,
+                        'hit' => 1,
+                    ];
+                    if ($user != null) {
+                        $adViewQuery = $adViewQuery->where('user_id', $user->id);
+                        $toSave['user_id'] = $user->id;
+                    } else {
+                        $adViewQuery = $adViewQuery->whereNull('user_id');
+                        $toSave['user_id'] = null;
+                    }
+        
+                    $adView = $adViewQuery->first();
+                    if ($adView == null) {
+                        $saveData = AdView::create($toSave);
+                    } else {
+                        $adViewQuery->increment('hit');
+                    }
                 }
             }
         }
