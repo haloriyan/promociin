@@ -102,29 +102,34 @@ class UserController extends Controller
     }
     public function profile($username, Request $request) {
         $username = base64_decode($username);
+        $blockedUserIDs = getBlockedUser($username, 'username');
         $now = Carbon::now();
         $u = User::where('username', $username);
         if ($request->with != "") {
             $u = $u->with(explode(",", $request->with));
         }
         $user = $u->first();
-        $contents = Content::where('user_id', $user->id)->with('user')->orderBy('created_at', 'DESC')->get();
+        if (in_array($user->id, $blockedUserIDs)) {
+            $user = null;
+        } else {
+            $contents = Content::where('user_id', $user->id)->with('user')->orderBy('created_at', 'DESC')->get();
 
-        if ($request->token != "") {
-            $me = User::where('token', $request->token)->first();
-            $appts = Appointment::where([
-                ['employer_id', $me->id],
-                ['employee_id', $user->id],
-                ['dues', '>=', $now->format('Y-m-d 00:00:00')],
-            ])
-            ->orWhere([
-                ['employer_id', $user->id],
-                ['employee_id', $me->id],
-                ['dues', '>=', $now->format('Y-m-d 00:00:00')],
-            ])
-            ->get(['id']);
+            if ($request->token != "") {
+                $me = User::where('token', $request->token)->first();
+                $appts = Appointment::where([
+                    ['employer_id', $me->id],
+                    ['employee_id', $user->id],
+                    ['dues', '>=', $now->format('Y-m-d 00:00:00')],
+                ])
+                ->orWhere([
+                    ['employer_id', $user->id],
+                    ['employee_id', $me->id],
+                    ['dues', '>=', $now->format('Y-m-d 00:00:00')],
+                ])
+                ->get(['id']);
 
-            $user->able_to_invite_interview = $appts->count() == 0;
+                $user->able_to_invite_interview = $appts->count() == 0;
+            }
         }
 
         return response()->json([

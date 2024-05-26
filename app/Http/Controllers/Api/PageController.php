@@ -8,24 +8,29 @@ use App\Models\Announcement;
 use App\Models\Content;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\UserBlock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PageController extends Controller
 {
     public function home(Request $request) {
+        // Get blocked users
+        $token = 'azoTukEyV5j4KHRMrxRbJ964mL319VFm';
+        $blockedUserIDs = getBlockedUser($request->token);
+
         $tag = $request->tag;
         if ($tag != "") {
             $c = Content::where('tags', 'LIKE', '%'.$tag.'%')
             ->orWhere('caption', 'LIKE', '%'.$tag.'%')
+            ->whereNotIn('user_id', $blockedUserIDs)
             ->orderBy('created_at', 'DESC');
         } else {
-            $c = Content::orderBy('created_at', 'DESC');
+            $c = Content::whereNotIn('user_id', $blockedUserIDs)->orderBy('created_at', 'DESC');
         }
         $contents = $c->with(['user','likes','dislikes'])->get();
 
         foreach ($contents as $c => $content) {
-            // $contents[$c]['likers_id'] = [];
             $likers = [];
             $dislikers = [];
             foreach ($content->likes as $like) {
