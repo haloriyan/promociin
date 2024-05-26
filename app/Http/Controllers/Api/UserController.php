@@ -244,6 +244,11 @@ class UserController extends Controller
             'status' => 200
         ]);
     }
+    public function requestDeletion(Request $request) {
+        return response()->json([
+            'message' => "Permintaan penghapusan akun Anda telah kami terima. Akun Anda akan kami bantu hapus dalam waktu maksimal 1 x 24 jam."
+        ]);
+    }
     public function deleteAccount(Request $request) {
         $u = User::where('token', $request->token);
         $user = $u->with(['certificates'])->first();
