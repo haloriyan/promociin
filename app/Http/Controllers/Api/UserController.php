@@ -9,6 +9,7 @@ use App\Models\Appointment;
 use App\Models\Chat;
 use App\Models\Content;
 use App\Models\User;
+use App\Models\UserBlock;
 use App\Models\UserFollowers;
 use App\Models\UserFollowing;
 use Carbon\Carbon;
@@ -135,6 +136,17 @@ class UserController extends Controller
         return response()->json([
             'user' => $user,
             'contents' => $contents,
+        ]);
+    }
+    public function block(Request $request) {
+        $user = User::where('token', $request->token)->first();
+        $saveData = UserBlock::create([
+            'blocker_id' => $user->id,
+            'blocked_id' => $request->blocked_id,
+        ]);
+
+        return response()->json([
+            'message' => "ok"
         ]);
     }
     public function follow($username, Request $request) {
