@@ -339,4 +339,11 @@ class UserController extends Controller
 
         return response()->json($res);
     }
+    public function search(Request $request) {
+        $users = User::where('name', 'LIKE', '%'.$request->q.'%')->take(15)->get();
+
+        return response()->json([
+            'users' => $users,
+        ]);
+    }
 }

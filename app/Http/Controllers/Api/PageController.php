@@ -28,7 +28,7 @@ class PageController extends Controller
         } else {
             $c = Content::whereNotIn('user_id', $blockedUserIDs)->orderBy('created_at', 'DESC');
         }
-        $contents = $c->with(['user','likes','dislikes'])->get();
+        $contents = $c->with(['user','likes','dislikes','stream'])->get();
 
         foreach ($contents as $c => $content) {
             $likers = [];

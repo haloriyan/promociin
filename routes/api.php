@@ -62,6 +62,7 @@ Route::group(['prefix' => "user"], function () {
     Route::post('update-photo', "UserController@updatePhoto");
     Route::post('delete-account', "UserController@deleteAccount");
     Route::post('request-deletion', "UserController@requestDeletion");
+    Route::get('search', "UserController@search");
 
     Route::post('forget-password', "UserController@forgetPassword");
     Route::post('reset-password', "UserController@resetPassword");
@@ -149,4 +150,18 @@ Route::group(['prefix' => "chat"], function () {
 
 Route::group(['prefix' => "stream"], function () {
     Route::post('post', "LivestreamController@post");
+
+    Route::post('start', "LivestreamController@start");
+    
+    Route::group(['prefix' => "code"], function () {
+        Route::post('generate', "LivestreamController@generateCode");
+        Route::post('auth', "LivestreamController@authCode");
+        Route::post('delete', "LivestreamController@deleteCode");
+        Route::post('/', "LivestreamController@liveCode");
+    });
+    
+    Route::group(['prefix' => "{key}"], function () {
+        Route::get('data', "LivestreamController@getDatas");
+        Route::post('chat/post', "LivestreamController@postChat");
+    });
 });
