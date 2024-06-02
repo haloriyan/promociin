@@ -87,7 +87,7 @@ class PageController extends Controller
         $contents = Content::where([
             ['caption', 'LIKE', '%'.$request->q.'%']
         ])
-        ->with(['user'])
+        ->with(['user','stream'])
         ->take(20)->get();
 
         if ($request->q != "") {

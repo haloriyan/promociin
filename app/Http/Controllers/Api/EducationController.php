@@ -22,6 +22,7 @@ class EducationController extends Controller
 
         $saveData = Education::create([
             'user_id' => $user->id,
+            'level' => $request->level,
             'institute_name' => $request->name,
             'major' => $request->major,
             'description' => $request->description,

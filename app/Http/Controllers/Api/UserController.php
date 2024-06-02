@@ -115,7 +115,7 @@ class UserController extends Controller
         if (in_array($user->id, $blockedUserIDs)) {
             $user = null;
         } else {
-            $contents = Content::where('user_id', $user->id)->with('user')->orderBy('created_at', 'DESC')->get();
+            $contents = Content::where('user_id', $user->id)->with(['user', 'stream'])->orderBy('created_at', 'DESC')->get();
 
             if ($request->token != "") {
                 $me = User::where('token', $request->token)->first();
