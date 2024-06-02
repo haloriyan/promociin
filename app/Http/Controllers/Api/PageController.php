@@ -65,10 +65,7 @@ class PageController extends Controller
                     Content::where('id', $content->id)->update([
                         'thumbnail' => $thumbnailName
                     ]);
-
-                    Log::info(
-                        'stored live thumb : ' . $thumbnailName
-                    );
+                    $contents[$c]['thumbnail'] = $thumbnailName;
                 }
             }
         }
