@@ -46,7 +46,7 @@ class PageController extends Controller
             $contents[$c]['i_have_reported'] = false;
 
             if ($content->thumbnail == null && $content->stream_id != null) {
-                $streamPath = "/var/www/livestreams/" . $content->stream->stream_key;
+                $streamPath = "/var/www/livestreams/" . $content->stream->stream_key . "/0.ts";
                 $isExists = file_exists(
                     $streamPath
                 );
