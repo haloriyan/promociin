@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\UserBlock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
 
 class PageController extends Controller
 {
@@ -49,7 +51,25 @@ class PageController extends Controller
                     $streamPath
                 );
 
-                Log::info($streamPath . ' is : ' . $isExists);
+                if ($isExists) {
+                    // creating thumbnail
+                    $ffmpeg = FFMpeg::create();
+                    $video = $ffmpeg->open($streamPath);
+                    $thumbnailName = $content->stream->stream_key.".jpg";
+                    $video->frame(
+                        \FFMpeg\Coordinate\TimeCode::fromSeconds(5)
+                    )->save(
+                        storage_path('app/public/video_thumbs/' . $thumbnailName)
+                    );
+
+                    Content::where('id', $content->id)->update([
+                        'thumbnail' => $thumbnailName
+                    ]);
+
+                    Log::info(
+                        'stored live thumb : ' . $thumbnailName
+                    );
+                }
             }
         }
 
