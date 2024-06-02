@@ -42,6 +42,15 @@ class PageController extends Controller
             $contents[$c]['likers_id'] = $likers;
             $contents[$c]['dislikers_id'] = $dislikers;
             $contents[$c]['i_have_reported'] = false;
+
+            if ($content->thumbnail == null && $content->stream_id != null) {
+                $streamPath = "/var/www/livestreams/" . $content->stream->stream_key;
+                $isExists = file_exists(
+                    $streamPath
+                );
+
+                Log::info($streamPath . ' is : ' . $isExists);
+            }
         }
 
         $tags = Tag::orderBy('priority', 'DESC')->orderBy('updated_at', 'DESC')->get();

@@ -30,10 +30,9 @@ class LivestreamController extends Controller
             'can_be_shared' => true,
         ]);
 
-        $streamKey = "prmc-".rand(11111, 99999);
         $stream = Stream::create([
             'user_id' => $user->id,
-            'stream_key' => $streamKey,
+            'stream_key' => $request->stream_key,
             'visibility' => 'public'
         ]);
 
@@ -68,6 +67,14 @@ class LivestreamController extends Controller
                 $c->update([
                     'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 ]);
+            }
+        } else {
+            // as streamer
+            $cont = Content::where('stream_id', $stream->id);
+            $content = $cont->first();
+
+            if ($content->thumbnail == null) {
+                // 
             }
         }
 
