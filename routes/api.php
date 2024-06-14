@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => "page"], function () {
-    Route::get('home', "PageController@home");
+    Route::post('home', "PageController@home");
     Route::post('explore', "PageController@explore");
 });
 
