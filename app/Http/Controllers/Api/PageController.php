@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ad;
 use App\Models\Announcement;
 use App\Models\Content;
+use App\Models\ContentView;
 use App\Models\Tag;
 use App\Models\User;
 use App\Models\UserBlock;
@@ -18,7 +19,6 @@ class PageController extends Controller
 {
     public function home(Request $request) {
         // Get blocked users
-        $token = 'azoTukEyV5j4KHRMrxRbJ964mL319VFm';
         $blockedUserIDs = getBlockedUser($request->token);
 
         $tag = $request->tag;

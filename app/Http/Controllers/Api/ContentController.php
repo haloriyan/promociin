@@ -9,6 +9,7 @@ use App\Models\ContentComment;
 use App\Models\ContentDislike;
 use App\Models\ContentLike;
 use App\Models\ContentReport;
+use App\Models\ContentView;
 use App\Models\User;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
@@ -119,6 +120,7 @@ class ContentController extends Controller
             'visibility' => true,
             'likes_count' => 0,
             'comments_count' => 0,
+            'views_count' => 0,
             'tags' => $tags,
             // 'can_be_commented' => $request->can_be_commented,
             // 'can_be_shared' => $request->can_be_shared,
@@ -146,6 +148,29 @@ class ContentController extends Controller
         return response()->json([
             'status' => 200,
         ]);
+    }
+    public function hitView($contentID, Request $request) {
+        $token = 'azoTukEyV5j4KHRMrxRbJ964mL319VFm';
+        $user = User::where('token', $token)->first();
+        $c = Content::where('id', $contentID);
+        $content = $c->first();
+
+        if ($content->user_id != $user->id) {
+            $view = ContentView::where([
+                ['user_id', $user->id],
+                ['content_id', $contentID]
+            ])->get(['id']);
+    
+            if ($view->count() == 0) {
+                $saveView = ContentView::create([
+                    'content_id' => $contentID,
+                    'user_id' => $user->id,
+                ]);
+                $updateViewsCount = $c->increment('views_count');
+            }
+        }
+
+        return response()->json(['ok']);
     }
     public function like($contentID, Request $request) {
         $c = Content::where('id', $contentID);

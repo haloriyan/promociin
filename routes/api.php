@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => "page"], function () {
-    Route::post('home', "PageController@home");
+    Route::get('home', "PageController@home");
     Route::post('explore', "PageController@explore");
 });
 
@@ -122,6 +122,7 @@ Route::group(['prefix' => "content"], function () {
         Route::post('like', "ContentController@like");
         Route::post('dislike', "ContentController@dislike");
         Route::post('comment', "ContentController@comment");
+        Route::get('view', "ContentController@hitView");
         Route::get('stream', "ContentController@stream");
     });
 
