@@ -12,4 +12,8 @@ class Stream extends Model
     protected $fillable = [
         'user_id', 'stream_key', 'visibility'
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

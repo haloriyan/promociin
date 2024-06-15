@@ -17,6 +17,13 @@ use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class LivestreamController extends Controller
 {
+    public function list() {
+        $streams = Stream::with(['user'])->orderBy('created_at', 'DESC')->take(15)->get();
+
+        return response()->json([
+            'streams' => $streams
+        ]);
+    }
     public function start(Request $request) {
         $user = User::where('token', $request->token)->first();
 

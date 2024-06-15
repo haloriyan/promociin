@@ -100,6 +100,8 @@ class AppointmentController extends Controller
                 'is_accepted_by_employee' => $answer == "accept" ? true : false,
             ]);
         }
+
+        // Notify employee
         
         return response()->json([
             'status' => 200,

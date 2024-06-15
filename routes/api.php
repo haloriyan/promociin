@@ -153,6 +153,7 @@ Route::group(['prefix' => "stream"], function () {
     Route::post('post', "LivestreamController@post");
 
     Route::post('start', "LivestreamController@start");
+    Route::get('list', "LivestreamController@list");
     
     Route::group(['prefix' => "code"], function () {
         Route::post('generate', "LivestreamController@generateCode");
