@@ -150,8 +150,8 @@ class ContentController extends Controller
         ]);
     }
     public function hitView($contentID, Request $request) {
-        $token = 'azoTukEyV5j4KHRMrxRbJ964mL319VFm';
-        $user = User::where('token', $token)->first();
+        // $token = 'azoTukEyV5j4KHRMrxRbJ964mL319VFm';
+        $user = User::where('token', $request->token)->first();
         $c = Content::where('id', $contentID);
         $content = $c->first();
 

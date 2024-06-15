@@ -122,7 +122,7 @@ Route::group(['prefix' => "content"], function () {
         Route::post('like', "ContentController@like");
         Route::post('dislike', "ContentController@dislike");
         Route::post('comment', "ContentController@comment");
-        Route::get('view', "ContentController@hitView");
+        Route::post('view', "ContentController@hitView");
         Route::get('stream', "ContentController@stream");
     });
 
@@ -164,5 +164,14 @@ Route::group(['prefix' => "stream"], function () {
     Route::group(['prefix' => "{key}"], function () {
         Route::get('data', "LivestreamController@getDatas");
         Route::post('chat/post', "LivestreamController@postChat");
+    });
+});
+
+Route::group(['prefix' => "training-center"], function () {
+    Route::post('store', "TcController@store");
+    Route::get('list', "TcController@list");
+
+    Route::group(['prefix' => "{id}/course"], function () {
+        Route::post('store', "TcController@courseStore");
     });
 });
