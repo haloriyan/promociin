@@ -28,7 +28,12 @@ class PageController extends Controller
             ->whereNotIn('user_id', $blockedUserIDs)
             ->orderBy('created_at', 'DESC');
         } else {
-            $c = Content::whereNotIn('user_id', $blockedUserIDs)->orderBy('created_at', 'DESC');
+            if ($request->is_live == 1) {
+                Log::info('is live');
+                $c = Content::whereNotNull('stream_id')->whereNotIn('user_id', $blockedUserIDs)->orderBy('created_at', 'DESC');
+            } else {
+                $c = Content::whereNotIn('user_id', $blockedUserIDs)->orderBy('created_at', 'DESC');
+            }
         }
         $contents = $c->with(['user','likes','dislikes','stream'])->get();
 
@@ -70,7 +75,7 @@ class PageController extends Controller
             }
         }
 
-        $tags = Tag::orderBy('priority', 'DESC')->orderBy('updated_at', 'DESC')->get();
+        $tags = [];
         $announcements = Announcement::orderBy('created_at', 'DESC')->take(25)->get();
 
         return response()->json([
