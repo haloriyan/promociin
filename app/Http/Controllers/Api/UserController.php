@@ -246,9 +246,10 @@ class UserController extends Controller
             'name' => $request->name,
             'about' => $request->about,
         ]);
+        $user = $u->first();
 
         return response()->json([
-            'message' => "ok"
+            'user' => $user,
         ]);
     }
 
