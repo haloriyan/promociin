@@ -23,6 +23,13 @@ use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg as SupportFFMpeg;
 
 class ContentController extends Controller
 {
+    public function getData($contentID) {
+        $content = Content::where('id', $contentID)->first();
+
+        return response()->json([
+            'content' => $content,
+        ]);
+    }
     public function generateThumbnail($path, $filename) {
         if (file_exists($path)) {
             if (!in_array('video_thumbs', Storage::disk('public')->directories())) {
@@ -126,8 +133,6 @@ class ContentController extends Controller
             'can_be_commented' => $request->can_be_commented ? 1 : 0,
             'can_be_shared' => $request->can_be_shared ? 1 : 0,
         ]);
-
-        Log::info($request->industry_related);
 
         return response()->json([
             'status' => 200,

@@ -125,6 +125,7 @@ Route::group(['prefix' => "content"], function () {
         Route::post('comment', "ContentController@comment");
         Route::post('view', "ContentController@hitView");
         Route::get('stream', "ContentController@stream");
+        Route::get('/', "ContentController@getData");
     });
 
     Route::post('/', "ContentController@myContent");
