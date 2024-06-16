@@ -29,10 +29,19 @@ class PageController extends Controller
             ->orderBy('created_at', 'DESC');
         } else {
             if ($request->is_live == 1) {
-                Log::info('is live');
                 $c = Content::whereNotNull('stream_id')->whereNotIn('user_id', $blockedUserIDs)->orderBy('created_at', 'DESC');
             } else {
-                $c = Content::whereNotIn('user_id', $blockedUserIDs)->orderBy('created_at', 'DESC');
+                if ($request->industry != "") {
+                    Log::info($request->industry);
+                    $c = Content::whereNull('stream_id')->whereNotIn('user_id', $blockedUserIDs)
+                    ->where('industry_related', true)
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('industry', 'LIKE', '%'.$request->industry.'%');
+                    })
+                    ->orderBy('created_at', 'DESC');
+                } else {
+                    $c = Content::whereNull('stream_id')->whereNotIn('user_id', $blockedUserIDs)->orderBy('created_at', 'DESC');
+                }
             }
         }
         $contents = $c->with(['user','likes','dislikes','stream'])->get();

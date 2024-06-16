@@ -252,6 +252,14 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+    public function saveIndustry(Request $request) {
+        $u = User::where('token', $request->token);
+        $u->update([
+            'industry' => $request->industry,
+        ]);
+
+        return response()->json(['ok']);
+    }
 
     public function forgetPassword(Request $request) {
         $email = $request->email;

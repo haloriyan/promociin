@@ -61,6 +61,7 @@ Route::group(['prefix' => "user"], function () {
     Route::post('update-bio', "UserController@updateBio");
     Route::post('update-photo', "UserController@updatePhoto");
     Route::post('delete-account', "UserController@deleteAccount");
+    Route::post('save-industry', "UserController@saveIndustry");
     Route::post('request-deletion', "UserController@requestDeletion");
     Route::get('search', "UserController@search");
 

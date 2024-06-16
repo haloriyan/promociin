@@ -122,11 +122,12 @@ class ContentController extends Controller
             'comments_count' => 0,
             'views_count' => 0,
             'tags' => $tags,
-            // 'can_be_commented' => $request->can_be_commented,
-            // 'can_be_shared' => $request->can_be_shared,
-            'can_be_commented' => true,
-            'can_be_shared' => true,
+            'industry_related' => $request->industry_related ? 1 : 0,
+            'can_be_commented' => $request->can_be_commented ? 1 : 0,
+            'can_be_shared' => $request->can_be_shared ? 1 : 0,
         ]);
+
+        Log::info($request->industry_related);
 
         return response()->json([
             'status' => 200,
