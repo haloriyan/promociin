@@ -44,7 +44,7 @@ class PageController extends Controller
                 }
             }
         }
-        $contents = $c->with(['user','likes','dislikes','stream'])->get();
+        $contents = $c->with(['user.skills','likes','dislikes','stream'])->get();
 
         foreach ($contents as $c => $content) {
             $likers = [];
