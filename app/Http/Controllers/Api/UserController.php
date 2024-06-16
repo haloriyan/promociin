@@ -260,6 +260,14 @@ class UserController extends Controller
 
         return response()->json(['ok']);
     }
+    public function saveCountry(Request $request) {
+        $u = User::where('token', $request->token);
+        $u->update([
+            'country' => $request->country,
+        ]);
+
+        return response()->json(['ok']);
+    }
 
     public function forgetPassword(Request $request) {
         $email = $request->email;
