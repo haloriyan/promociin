@@ -24,7 +24,7 @@ use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg as SupportFFMpeg;
 class ContentController extends Controller
 {
     public function getData($contentID) {
-        $content = Content::where('id', $contentID)->first();
+        $content = Content::where('id', $contentID)->with(['user'])->first();
 
         return response()->json([
             'content' => $content,
