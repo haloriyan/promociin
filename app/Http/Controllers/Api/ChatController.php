@@ -113,4 +113,20 @@ class ChatController extends Controller
             'status' => 200,
         ]);
     }
+    public function deleteRoom(Request $request) {
+        $user_a = $request->user_a;
+        $user_b = $request->user_b;
+
+        $deleteChat = Chat::where([
+            ['receiver_id', $user_a],
+            ['sender_id', $user_b],
+        ])->orWhere([
+            ['receiver_id', $user_b],
+            ['sender_id', $user_a],
+        ])->delete();
+
+        return response()->json([
+            'ok'
+        ]);
+    }
 }

@@ -149,6 +149,7 @@ Route::group(['prefix' => "chat"], function () {
     Route::post('load', "ChatController@load");
     Route::post('send', "ChatController@send");
     Route::post('room', "ChatController@room");
+    Route::post('delete-room', "ChatController@deleteRoom");
 });
 
 Route::group(['prefix' => "stream"], function () {
