@@ -268,6 +268,14 @@ class UserController extends Controller
 
         return response()->json(['ok']);
     }
+    public function saveJobType(Request $request) {
+        $u = User::where('token', $request->token);
+        $u->update([
+            'job_type' => $request->job_type,
+        ]);
+
+        return response()->json(['ok']);
+    }
 
     public function forgetPassword(Request $request) {
         $email = $request->email;

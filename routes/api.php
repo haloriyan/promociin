@@ -63,6 +63,7 @@ Route::group(['prefix' => "user"], function () {
     Route::post('delete-account', "UserController@deleteAccount");
     Route::post('save-industry', "UserController@saveIndustry");
     Route::post('save-country', "UserController@saveCountry");
+    Route::post('save-job-type', "UserController@saveJobType");
     Route::post('request-deletion', "UserController@requestDeletion");
     Route::get('search', "UserController@search");
 
