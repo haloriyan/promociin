@@ -42,9 +42,9 @@ class InterviewInvitation extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('Halo, ' . $this->employee->name . '!')
-                    ->line('Anda baru saja mendapat undangan untuk interview dari ' . $this->employer->name . " pada " . Carbon::parse($this->appointment->dues)->isoFormat('DD MMM Y'))
-                    ->line('Buka aplikasi Anda untuk menerima atau menolak undangan');
+                    ->line('Hi, ' . $this->employee->name . '!')
+                    ->line('You just got an interview invitation from ' . $this->employer->name . " on " . Carbon::parse($this->appointment->dues)->isoFormat('DD MMM Y'))
+                    ->line('Open your profile to accept or reject invitation');
     }
 
     /**

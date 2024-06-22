@@ -27,14 +27,14 @@ class Otp extends Notification
         $purp = $props['otp']->purpose;
 
         if ($purp == 'register') {
-            $this->subject = "Selamat Datang, ".$props['user']->name;
-            $this->purpose = "melanjutkan pendaftaran";
+            $this->subject = "Welcome, ".$props['user']->name;
+            $this->purpose = "continuing registration";
         } else if ($purp == 'login') {
-            $this->subject = "Halo Lagi, " . $props['user']->name;
-            $this->purpose = "melanjutkan login ke aplikasi";
+            $this->subject = "Hello (again), " . $props['user']->name;
+            $this->purpose = "logging into Promociin app";
         } else if ($purp == 'reset_password') {
-            $this->subject = "Atur Ulang Password";
-            $this->purpose = "mengatur ulang password";
+            $this->subject = "Reset Password";
+            $this->purpose = "resetting password";
         }
     }
 
@@ -55,12 +55,12 @@ class Otp extends Notification
     {
         return (new MailMessage)
                     ->subject($this->subject)
-                    ->greeting('Halo, ' . $this->user->name)
-                    ->line('Untuk ' . $this->purpose . ", mohon masukkan 4 angka berikut ini pada aplikasi")
+                    ->greeting('Hi, ' . $this->user->name)
+                    ->line('For ' . $this->purpose . ", please insert this 4 digits number on your screen")
                     ->line(
                         new HtmlString('<div style="font-size: 42px;font-weight: 700;margin-bottom: 40px;color: #2196f3;">' . $this->otp->code . '</div>')
                     )
-                    ->line('Jika Anda merasa tidak melakukan ini, mohon untuk segera mengganti kata sandi Anda!');
+                    ->line('If you feel did not doing this, please change your password soon!');
     }
 
     /**
