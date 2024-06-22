@@ -115,4 +115,11 @@ class PageController extends Controller
             'accounts' => $accounts,
         ]);
     }
+    public function jobMatch() {
+        $users = User::paginate(5);
+
+        return response()->json([
+            'users' => $users,
+        ]);
+    }
 }

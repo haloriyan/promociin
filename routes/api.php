@@ -180,3 +180,7 @@ Route::group(['prefix' => "training-center"], function () {
         Route::post('store', "TcController@courseStore");
     });
 });
+
+Route::group(['prefix' => "match"], function () {
+    Route::post('/', "PageController@jobMatch");
+});
