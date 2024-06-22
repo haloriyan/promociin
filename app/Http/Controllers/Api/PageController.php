@@ -128,7 +128,7 @@ class PageController extends Controller
             array_push($filters, ['job_type', 'LIKE', '%'.$request->job_type.'%']);
         }
 
-        $users = User::where($filters)->paginate(5);
+        $users = User::where($filters)->with(['skills'])->paginate(5);
 
         return response()->json([
             'users' => $users,
