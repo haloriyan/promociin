@@ -118,7 +118,7 @@ class PageController extends Controller
     public function jobMatch(Request $request) {
         $user = User::where('token', $request->token)->first();
         $filters = [
-            ['user_id', '!=', $user->id]
+            ['id', '!=', $user->id]
         ];
 
         if ($request->industry != "") {
