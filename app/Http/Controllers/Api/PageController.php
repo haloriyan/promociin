@@ -115,8 +115,20 @@ class PageController extends Controller
             'accounts' => $accounts,
         ]);
     }
-    public function jobMatch() {
-        $users = User::paginate(5);
+    public function jobMatch(Request $request) {
+        $user = User::where('token', $request->token)->first();
+        $filters = [
+            ['user_id', '!=', $user->id]
+        ];
+
+        if ($request->industry != "") {
+            array_push($filters, ['industry', 'LIKE', '%'.$request->industry.'%']);
+        }
+        if ($request->job_type != "") {
+            array_push($filters, ['job_type', 'LIKE', '%'.$request->job_type.'%']);
+        }
+
+        $users = User::where($filters)->paginate(5);
 
         return response()->json([
             'users' => $users,
