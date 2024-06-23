@@ -276,6 +276,14 @@ class UserController extends Controller
 
         return response()->json(['ok']);
     }
+    public function saveWorkPreference(Request $request) {
+        $u = User::where('token', $request->token);
+        $u->update([
+            'work_preference' => $request->work_preference,
+        ]);
+
+        return response()->json(['ok']);
+    }
 
     public function forgetPassword(Request $request) {
         $email = $request->email;
