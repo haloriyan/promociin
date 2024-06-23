@@ -128,6 +128,9 @@ class PageController extends Controller
         if ($request->job_type != "") {
             array_push($filters, ['job_type', 'LIKE', '%'.$request->job_type.'%']);
         }
+        if ($request->pref != "") {
+            array_push($filters, ['work_preference', 'LIKE', '%'.$request->pref.'%']);
+        }
 
         $users = User::where($filters)->whereNotIn('id', $blockedUserIDs)->with(['skills'])->orderBy('created_at', 'DESC')->paginate(5);
 
