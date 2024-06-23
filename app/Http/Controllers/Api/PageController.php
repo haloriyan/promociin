@@ -116,6 +116,7 @@ class PageController extends Controller
         ]);
     }
     public function jobMatch(Request $request) {
+        $blockedUserIDs = getBlockedUser($request->token);
         $user = User::where('token', $request->token)->first();
         $filters = [
             ['id', '!=', $user->id]
@@ -128,7 +129,7 @@ class PageController extends Controller
             array_push($filters, ['job_type', 'LIKE', '%'.$request->job_type.'%']);
         }
 
-        $users = User::where($filters)->with(['skills'])->orderBy('created_at', 'DESC')->paginate(5);
+        $users = User::where($filters)->whereNotIn('id', $blockedUserIDs)->with(['skills'])->orderBy('created_at', 'DESC')->paginate(5);
 
         return response()->json([
             'users' => $users,
