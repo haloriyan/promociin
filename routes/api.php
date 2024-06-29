@@ -186,3 +186,20 @@ Route::group(['prefix' => "training-center"], function () {
 Route::group(['prefix' => "match"], function () {
     Route::post('/', "PageController@jobMatch");
 });
+
+Route::group(['prefix' => "vacancy"], function () {
+    Route::post('store', "VacancyController@store");
+    Route::group(['prefix' => "{id}"], function () {
+        Route::post('detail', "VacancyController@detail");
+        Route::post('update', "VacancyController@update");
+        Route::post('delete', "VacancyController@delete");
+        Route::post('apply', "VacancyController@apply");
+    });
+    Route::post('/', "VacancyController@fetch");
+});
+
+Route::group(['prefix' => "service"], function () {
+    Route::post('store', "ServiceController@store");
+    Route::post('delete', "ServiceController@delete");
+    Route::post('/', "ServiceController@fetch");
+});

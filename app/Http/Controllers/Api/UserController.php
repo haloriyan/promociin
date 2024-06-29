@@ -29,7 +29,7 @@ class UserController extends Controller
 
         if ($user == null) {
             $res = [
-                'status' => 500,
+                'status' => 404,
                 'message' => "Kami tidak dapat menemukan akun Anda"
             ];
         } else {

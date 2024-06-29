@@ -59,4 +59,7 @@ class User extends Authenticatable
     public function follower_status() {
         return $this->hasOne(UserFollowers::class, 'follower_user_id');
     }
+    public function services() {
+        return $this->hasMany(Service::class, 'user_id');
+    }
 }
